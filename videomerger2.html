@@ -134,21 +134,18 @@
                 document.getElementById("log").innerHTML = "<button>Download</button>";
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
-                const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: blob.type})]}
+                const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
                 const btn = document.querySelector('button');
 
                 // Share must be triggered by "user activation"
                 btn.addEventListener('click', async () => {
-                    if (typeof this.navigator.share === "function") {
                         try {
-                            await this.navigator.share(shareData)
+                            navigator.share(shareData)
                         
                         } catch(err) {
                             console.log("[ERROR]"+err);
                         }
-                    } else {
-                        console.log("[ERROR] broken function for webshare")
-                    }
+                    
                
                 });
                 //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
