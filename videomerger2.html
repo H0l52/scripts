@@ -139,15 +139,17 @@
 
                 // Share must be triggered by "user activation"
                 btn.addEventListener('click', async () => {
-                try {
-                    if (!navigator.canShare(shareData)) {
-                        throw new error("fail")
+                    if (typeof this.windowNavigator.share === "function") {
+                        try {
+                            await this.windowNavigator.share(shareData)
+                        
+                        } catch(err) {
+                            console.log("[ERROR]"+err);
+                        }
+                    } else {
+                        console.log("[ERROR] broken function for webshare")
                     }
-                    await navigator.share(shareData)
-                   
-                } catch(err) {
-                    console.log("[ERROR]"+err);
-                }
+               
                 });
                 //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
             }
