@@ -134,12 +134,15 @@
                 document.getElementById("log").innerHTML = "<button>Download</button>";
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
-                const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: 'video/mp4'})], url:"127.0.0.1"}
+                const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: blob.type})]}
                 const btn = document.querySelector('button');
 
                 // Share must be triggered by "user activation"
                 btn.addEventListener('click', async () => {
                 try {
+                    if (!navigator.canShare(shareData)) {
+                        throw new error("fail")
+                    }
                     await navigator.share(shareData)
                    
                 } catch(err) {
