@@ -1,0 +1,209 @@
+---
+layout: page
+---
+<html>
+    <head>
+        <!--<script src="https://rawgit.com/bgrins/videoconverter.js/master/build/ffmpeg-all-codecs.js"></script>-->
+        <!--<script src="./worker.js"></script>-->
+        <script>
+                
+            function worker_function() {
+
+            if( 'function' === typeof importScripts) {
+            importScripts('https://rawgit.com/bgrins/videoconverter.js/master/build/ffmpeg.js');
+            }
+            
+            var now = Date.now;
+
+            function print(text) {
+            postMessage({
+            'type' : 'stdout',
+            'data' : text
+            });
+            }
+
+            onmessage = function(event) {
+
+            var message = event.data;
+
+            if (message.type === "command") {
+
+            var Module = {
+                print: print,
+                printErr: print,
+                files: message.files || [],
+                arguments: message.arguments || [],
+                TOTAL_MEMORY: message.TOTAL_MEMORY || false
+                // Can play around with this option - must be a power of 2
+                // TOTAL_MEMORY: 268435456
+            };
+
+            postMessage({
+                'type' : 'start',
+                'data' : Module.arguments.join(" ")
+            });
+
+            postMessage({
+                'type' : 'stdout',
+                'data' : 'Received command: ' +
+                        Module.arguments.join(" ") +
+                        ((Module.TOTAL_MEMORY) ? ".  Processing with " + Module.TOTAL_MEMORY + " bits." : "")
+            });
+
+            var time = now();
+            var result = ffmpeg_run(Module);
+
+            var totalTime = now() - time;
+            postMessage({
+                'type' : 'stdout',
+                'data' : 'Finished processing (took ' + totalTime + 'ms)'
+            });
+
+            postMessage({
+                'type' : 'done',
+                'data' : result,
+                'time' : totalTime
+            });
+            }
+            };
+
+            postMessage({
+            'type' : 'ready'
+            });
+
+            }
+
+            if(window!=self)
+                worker_function();
+
+
+
+        </script>
+    </head>
+    <body>
+        <p id="log"></p>
+        <script>
+            (function () {
+                var old = console.log;
+                var logger = document.getElementById('log');
+                console.log = function (message) {
+                    if (typeof message == 'object') {
+                        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+                    } else {
+                        logger.innerHTML += message + '<br />';
+                    }
+                }
+            })();
+            
+        </script>
+ 
+    
+        <script>
+
+            var VIDEOLINK = "https://v.redd.it/someid/DASH_someres.mp4";
+            var AUDIOLINK =  "https://v.redd.it/someid/DASH_audio.mp4";
+            var url = new URL(window.location.href);
+            VIDEOLINK = url.searchParams.get("v");
+            AUDIOLINK = url.searchParams.get("a");
+            var VideoData;
+            (function () {
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", VIDEOLINK, true);
+            oReq.responseType = "arraybuffer";
+
+            oReq.onload = function (oEvent) {
+                var arrayBuffer = oReq.response;
+                if (arrayBuffer) {
+                VideoData = new Uint8Array(arrayBuffer);
+                }
+            }
+
+            oReq.send(null);
+            })();
+
+            var AudioData;
+            (function () {
+            var oReq2 = new XMLHttpRequest();
+            oReq2.open("GET", AUDIOLINK, true);
+            oReq2.responseType = "arraybuffer";
+
+            oReq2.onload = function (oEvent) {
+                var arrayBuffer2 = oReq2.response;
+                if (arrayBuffer2) {
+                AudioData = new Uint8Array(arrayBuffer2);
+                }
+            }
+
+            oReq2.send(null);
+            })();
+
+            function getDownloadLink(fileData, fileName) {
+                document.getElementById("log").innerHTML = "<button>download</button>";
+                var blob = new Blob([fileData]);
+                var src = window.URL.createObjectURL(blob);
+                //const filereader = new FileReader();
+                //var dsrc = filereader.readAsDataURL(new File([blob], "REDDITVIDEO.mp4",{type: "video/mp4"}));
+                //document.getElementById("log").innerHTML = "src" + src + " dsrc" + dsrc;
+                //filereader.onload =  function(e){
+                    //document.location.href = e.target.result;
+                    //console.log('DataURL:', e.target.result);
+                //};
+                //document.location.replace(dsrc);
+                //const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
+                const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
+                //const shareData = {title:"a", url:"https://www.google.com"}
+                const btn = document.querySelector('button');
+                
+                // Share must be triggered by "user activation"
+                btn.addEventListener('click', () => {
+                        try {
+                            //console.log(window.navigator)
+                            window.navigator.share(shareData)
+                        
+                        } catch(err) {
+                            console.log("[ERROR]"+err);
+                        }
+                    
+               
+                });
+                //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
+            }
+
+            //var worker = new Worker("./worker.js");
+            var worker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})));
+            worker.onmessage = function (event) {
+            var message = event.data;
+            if (message.type == "ready") {
+                console.log("Loaded");
+                worker.postMessage({
+                type: 'command',
+                arguments: ['-i', "input.mp4", '-i', "audio.mp4", '-c', 'copy', 'output.mp4'],
+                files: [
+                    {
+                    "name": "input.mp4",
+                    "data": VideoData
+                    },
+                    {
+                    "name": "audio.mp4",
+                    "data": AudioData
+                    }
+                ]
+                })
+            } else if (message.type == "stdout") {
+                console.log(message.data);
+                
+            } else if (message.type == "start") {
+                console.log("Worker has received command\n");
+            } else if (message.type == "done") {
+                console.log(message.data);
+                document.getElementById("log").innerHTML = "";
+                message.data.forEach(function(file) {
+                    getDownloadLink(file.data, file.name);
+                });
+            }
+            };
+            
+
+        </script>
+    </body>
+</html>
