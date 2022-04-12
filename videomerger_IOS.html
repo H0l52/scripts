@@ -132,24 +132,7 @@ layout: default
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status == 403) {
                     legal = false;
-                    document.getElementById("log").innerHTML = '<button id="download" style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download (NO AUDIO)</h1></button>';
-                    try{
-                      document.getElementById('download').addEventListener('click', () => {
-                              try {
-                                  var blob = new Blob([VideoData]);
-                                  var src = window.URL.createObjectURL(blob);
-                                  const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
-                                  window.navigator.share(shareData)
-
-                              } catch(err) {
-                                  console.log("[ERROR]"+err);
-                              }
-
-
-                      });
-                    } catch (err) {
-                      console.log("[ERROR]"+err);
-                    }
+                    
                 }
                 
             }
@@ -212,12 +195,32 @@ layout: default
             } else if (message.type == "start") {
                 console.log("Worker has received command\n");
             } else if (message.type == "done") {
-              if (legal) {
+              if (legal || message.data.length === 0) {
                 console.log(message.data);
                 document.getElementById("log").innerHTML = "";
                 message.data.forEach(function(file) {
                     getDownloadLink(file.data, file.name);
                 });
+              } else {
+                
+                    document.getElementById("log").innerHTML = '<button id="download" style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download (NO AUDIO)</h1></button>';
+                    try{
+                      document.getElementById('download').addEventListener('click', () => {
+                              try {
+                                  var blob = new Blob([VideoData]);
+                                  var src = window.URL.createObjectURL(blob);
+                                  const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
+                                  window.navigator.share(shareData)
+
+                              } catch(err) {
+                                  console.log("[ERROR]"+err);
+                              }
+
+
+                      });
+                    } catch (err) {
+                      console.log("[ERROR]"+err);
+                    }
               }
             }
             };
