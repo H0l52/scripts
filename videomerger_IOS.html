@@ -195,7 +195,7 @@ layout: default
             } else if (message.type == "start") {
                 console.log("Worker has received command\n");
             } else if (message.type == "done") {
-              if (legal || message.data.length === 0) {
+              if (legal && message.data.length != 0) {
                 console.log(message.data);
                 document.getElementById("log").innerHTML = "";
                 message.data.forEach(function(file) {
