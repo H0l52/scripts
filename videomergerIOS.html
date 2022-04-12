@@ -97,11 +97,15 @@
     
         <script>
 
-
+            var VIDEOLINK = "https://v.redd.it/someid/DASH_someres.mp4";
+            var AUDIOLINK =  "https://v.redd.it/someid/DASH_audio.mp4";
+            var url = new URL(window.location.href);
+            VIDEOLINK = url.searchParams.get("v");
+            AUDIOLINK = url.searchParams.get("a");
             var VideoData;
             (function () {
             var oReq = new XMLHttpRequest();
-            oReq.open("GET", "https://v.redd.it/w6xsrn47zus81/DASH_720.mp4", true);
+            oReq.open("GET", VIDEOLINK, true);
             oReq.responseType = "arraybuffer";
 
             oReq.onload = function (oEvent) {
@@ -117,7 +121,7 @@
             var AudioData;
             (function () {
             var oReq2 = new XMLHttpRequest();
-            oReq2.open("GET", "https://v.redd.it/w6xsrn47zus81/DASH_audio.mp4", true);
+            oReq2.open("GET", AUDIOLINK, true);
             oReq2.responseType = "arraybuffer";
 
             oReq2.onload = function (oEvent) {
@@ -131,32 +135,34 @@
             })();
 
             function getDownloadLink(fileData, fileName) {
-                //document.getElementById("log").innerHTML = "<button>Download</button>";
+                document.getElementById("log").innerHTML = "<button>download</button>";
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
-                const filereader = new FileReader();
-                var dsrc = filereader.readAsDataURL(new File([blob], "REDDITVIDEO.mp4",{type: "video/mp4"}));
+                //const filereader = new FileReader();
+                //var dsrc = filereader.readAsDataURL(new File([blob], "REDDITVIDEO.mp4",{type: "video/mp4"}));
                 //document.getElementById("log").innerHTML = "src" + src + " dsrc" + dsrc;
-                filereader.onload =  function(e){
-                    document.location.href = e.target.result;
+                //filereader.onload =  function(e){
+                    //document.location.href = e.target.result;
                     //console.log('DataURL:', e.target.result);
-                };
+                //};
                 //document.location.replace(dsrc);
                 //const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
-                //const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
-                //const btn = document.querySelector('button');
+                const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
+                //const shareData = {title:"a", url:"https://www.google.com"}
+                const btn = document.querySelector('button');
                 
                 // Share must be triggered by "user activation"
-                // btn.addEventListener('click', async () => {
-                //         try {
-                //             await navigator.share(shareData)
+                btn.addEventListener('click', () => {
+                        try {
+                            //console.log(window.navigator)
+                            window.navigator.share(shareData)
                         
-                //         } catch(err) {
-                //             console.log("[ERROR]"+err);
-                //         }
+                        } catch(err) {
+                            console.log("[ERROR]"+err);
+                        }
                     
                
-                // });
+                });
                 //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
             }
 
