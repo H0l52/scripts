@@ -124,13 +124,15 @@ layout: default
             })();
 
             var AudioData;
+            var XMLFail = false;
             (function () {
             var oReq2 = new XMLHttpRequest();
             oReq2.open("GET", AUDIOLINK, true);
             oReq2.responseType = "arraybuffer";
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status == 403) {
-                    document.getElementById("log").innerHTML = "<button>download</button>";
+                    XMLFail = true;
+                    document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;">download</button>';
                     var blob = new Blob([VideoData]);
                     var src = window.URL.createObjectURL(blob);
                     const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
@@ -159,6 +161,10 @@ layout: default
 
             oReq2.send(null);
             })();
+          
+            if (XMLFail) {
+              return
+            }
 
             function getDownloadLink(fileData, fileName) {
                 document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download</h1></button>';
