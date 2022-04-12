@@ -128,7 +128,26 @@ layout: default
             var oReq2 = new XMLHttpRequest();
             oReq2.open("GET", AUDIOLINK, true);
             oReq2.responseType = "arraybuffer";
-
+            oReq2.onerror = function (oEvent) {
+                document.getElementById("log").innerHTML = "<button>download</button>";
+                var blob = new Blob([VideoData]);
+                var src = window.URL.createObjectURL(blob);
+                const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
+                const btn = document.querySelector('button');
+                btn.addEventListener('click', () => {
+                        try {
+                            //console.log(window.navigator)
+                            window.navigator.share(shareData)
+                        
+                        } catch(err) {
+                            console.log("[ERROR]"+err);
+                        }
+                    
+               
+                });
+                return
+                
+            }
             oReq2.onload = function (oEvent) {
                 var arrayBuffer2 = oReq2.response;
                 if (arrayBuffer2) {
