@@ -133,7 +133,7 @@ layout: default
                 if (this.readyState == 4 && this.status != 200) {
                   
                     var oReq3 = new XMLHttpRequest();
-                    AUDIOLINK.replace("DASH_audio", "audio");
+                    AUDIOLINK = AUDIOLINK.replace("DASH_audio", "audio");
                     oReq3.open("GET", AUDIOLINK, true);
                     oReq3.responseType = "arraybuffer";
                     oReq3.onreadystatechange = function (oEvent2) {
