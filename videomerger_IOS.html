@@ -132,7 +132,7 @@ layout: default
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status == 403) {
                     legal = false;
-                    document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;">download</button>';
+                    document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download (NO AUDIO)</h1></button>';
                     var blob = new Blob([VideoData]);
                     var src = window.URL.createObjectURL(blob);
                     const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
@@ -148,7 +148,6 @@ layout: default
                         
                 
                     });
-                    return
                 }
                 
             }
@@ -168,20 +167,10 @@ layout: default
                 document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download</h1></button>';
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
-                //const filereader = new FileReader();
-                //var dsrc = filereader.readAsDataURL(new File([blob], "REDDITVIDEO.mp4",{type: "video/mp4"}));
-                //document.getElementById("log").innerHTML = "src" + src + " dsrc" + dsrc;
-                //filereader.onload =  function(e){
-                    //document.location.href = e.target.result;
-                    //console.log('DataURL:', e.target.result);
-                //};
-                //document.location.replace(dsrc);
-                //const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
+                
                 const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
-                //const shareData = {title:"a", url:"https://www.google.com"}
                 const btn = document.querySelector('button');
                 
-                // Share must be triggered by "user activation"
                 btn.addEventListener('click', () => {
                         try {
                             //console.log(window.navigator)
@@ -193,10 +182,8 @@ layout: default
                     
                
                 });
-                //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
             }
 
-            //var worker = new Worker("./worker.js");
           
             var worker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})));
             worker.onmessage = function (event) {
