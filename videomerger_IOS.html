@@ -131,8 +131,25 @@ layout: default
             oReq2.responseType = "arraybuffer";
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status == 403) {
-                    legal = false;
+                  (function () {
+                    var oReq3 = new XMLHttpRequest();
+                    AUDIOLINK.replace("DASH_audio", "audio");
+                    oReq3.open("GET", AUDIOLINK, true);
+                    oReq3.responseType = "arraybuffer";
+                    oReq3.onreadystatechange = function (oEvent2) {
+                      if (this.readyState == 4 && this.status == 403) {
+                        legal = false;
+                      }
+                    }
+                    oReq3.onload = function (oEvent) {
+                      var arrayBuffer3 = oReq3.response;
+                      if (arrayBuffer3) {
+                      AudioData = new Uint8Array(arrayBuffer3);
+                      }
+                    }
+                  
                     
+                  })();
                 }
                 
             }
