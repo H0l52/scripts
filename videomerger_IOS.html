@@ -197,7 +197,7 @@ layout: default
             }
 
             //var worker = new Worker("./worker.js");
-          if (legal) {
+          
             var worker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})));
             worker.onmessage = function (event) {
             var message = event.data;
@@ -223,14 +223,16 @@ layout: default
             } else if (message.type == "start") {
                 console.log("Worker has received command\n");
             } else if (message.type == "done") {
+              if (legal) {
                 console.log(message.data);
                 document.getElementById("log").innerHTML = "";
                 message.data.forEach(function(file) {
                     getDownloadLink(file.data, file.name);
                 });
+              }
             }
             };
-          }
+          
             
 
         </script>
