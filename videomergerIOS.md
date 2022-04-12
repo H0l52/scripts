@@ -1,6 +1,8 @@
 ---
-layout: page
+layout: default
 ---
+  
+<!doctype html>
 <html>
     <head>
         <!--<script src="https://rawgit.com/bgrins/videoconverter.js/master/build/ffmpeg-all-codecs.js"></script>-->
