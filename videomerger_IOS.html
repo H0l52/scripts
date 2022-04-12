@@ -132,14 +132,13 @@ layout: default
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status == 403) {
                     legal = false;
-                    document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download (NO AUDIO)</h1></button>';
-                    var blob = new Blob([VideoData]);
-                    var src = window.URL.createObjectURL(blob);
-                    const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
-                    const btn = document.querySelector('button');
+                    document.getElementById("log").innerHTML = '<button id="download" style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download (NO AUDIO)</h1></button>';
+                    const btn = document.getElementById('download');
                     btn.addEventListener('click', () => {
                             try {
-                                //console.log(window.navigator)
+                                var blob = new Blob([VideoData]);
+                                var src = window.URL.createObjectURL(blob);
+                                const shareData = {title:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
                                 window.navigator.share(shareData)
                             
                             } catch(err) {
@@ -164,7 +163,7 @@ layout: default
             
 
             function getDownloadLink(fileData, fileName) {
-                document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download</h1></button>';
+                document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download</h1></button>';
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
                 
