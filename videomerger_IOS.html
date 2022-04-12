@@ -119,7 +119,7 @@ layout: default
                 var arrayBuffer = oReq.response;
                 if (arrayBuffer) {
                 VideoData = new Uint8Array(arrayBuffer);
-                  patience[0] = true;
+                  audiorequest();
                 }
             }
 
@@ -129,7 +129,7 @@ layout: default
             var AudioData;
             var legal = true;
             
-            (function () {
+            function audiorequest() {
             var oReq2 = new XMLHttpRequest();
             oReq2.open("GET", AUDIOLINK, true);
             oReq2.responseType = "arraybuffer";
@@ -149,7 +149,7 @@ layout: default
                       var arrayBuffer3 = oReq3.response;
                       if (arrayBuffer3) {
                       AudioData = new Uint8Array(arrayBuffer3);
-                        patience[1] = true;
+                        runworker();
                       }
                     }
                   
@@ -162,12 +162,12 @@ layout: default
                 var arrayBuffer2 = oReq2.response;
                 if (arrayBuffer2) {
                 AudioData = new Uint8Array(arrayBuffer2);
-                  patience[1] = true;
+                  runworker();
                 }
             }
 
             oReq2.send(null);
-            })();
+            }
           
             
 
@@ -192,9 +192,7 @@ layout: default
                 });
             }
 
-            while (!patience[0] && !patience[1]) {
-            
-            }
+            function runworker() {
             var worker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})));
             worker.onmessage = function (event) {
             var message = event.data;
@@ -249,7 +247,7 @@ layout: default
               }
             }
             };
-          
+            }
             
 
         </script>
