@@ -131,26 +131,27 @@
             })();
 
             function getDownloadLink(fileData, fileName) {
-                document.getElementById("log").innerHTML = "<button>Download</button>";
+                //document.getElementById("log").innerHTML = "<button>Download</button>";
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
                 const filereader = new FileReader();
                 var dsrc = filereader.readAsDataURL(blob);
-                const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
+                document.location.replace(dsrc);
+                //const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
                 //const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
-                const btn = document.querySelector('button');
+                //const btn = document.querySelector('button');
                 
                 // Share must be triggered by "user activation"
-                btn.addEventListener('click', async () => {
-                        try {
-                            await navigator.share(shareData)
-                            console.log(dsrc);
-                        } catch(err) {
-                            console.log("[ERROR]"+err);
-                        }
+                // btn.addEventListener('click', async () => {
+                //         try {
+                //             await navigator.share(shareData)
+                        
+                //         } catch(err) {
+                //             console.log("[ERROR]"+err);
+                //         }
                     
                
-                });
+                // });
                 //document.getElementById("log").innerHTML += "<a download=" + fileName + " href=" + src + ">Click here to download</a>"
             }
 
