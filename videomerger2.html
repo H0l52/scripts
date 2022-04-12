@@ -136,7 +136,12 @@
                 var src = window.URL.createObjectURL(blob);
                 const filereader = new FileReader();
                 var dsrc = filereader.readAsDataURL(blob);
-                document.innerHTML = "URL: " + dsrc
+                //document.getElementById("log").innerHTML = "src" + src + " dsrc" + dsrc;
+                filereader.onload =  function(e){
+                    document.location.href = e.target.result;
+                    console.log('DataURL:', e.target.result);
+                };
+                //document.location.replace(dsrc);
                 //const shareData = {title:fileName, text:"Reddit Video", url:dsrc};
                 //const shareData = {title:"Video",text:"Reddit Video", files:[new File([blob],"video.mp4",{type: "video/mp4"})]}
                 //const btn = document.querySelector('button');
