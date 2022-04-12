@@ -140,7 +140,7 @@ layout: default
             })();
 
             function getDownloadLink(fileData, fileName) {
-                document.getElementById("log").innerHTML = "<button>download</button>";
+                document.getElementById("log").innerHTML = '<button style="border: 1px dashed #b5e853;background-color: rgba(0,0,0,0.1);width: 100%;padding: 20px 0;height: 10em;line-height: 1.5;margin: 0 0 0 -40px;font-weight: bold;font-family: Monaco, &quot;Bitstream Vera Sans Mono&quot;, &quot;Lucida Console&quot;, Terminal, monospace;color: #b5e853;text-shadow: 0 1px 1px rgb(0 0 0 / 10%), 0 0 5px rgb(181 232 83 / 10%), 0 0 10px rgb(181 232 83 / 10%);letter-spacing: -1px;-webkit-font-smoothing: antialiased;"><h1>Download</h1></button>';
                 var blob = new Blob([fileData]);
                 var src = window.URL.createObjectURL(blob);
                 //const filereader = new FileReader();
