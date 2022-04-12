@@ -107,7 +107,6 @@ layout: default
             var url = new URL(window.location.href);
             VIDEOLINK = url.searchParams.get("v");
             AUDIOLINK = url.searchParams.get("a");
-            var patience = [false, false];
           
             var VideoData;
             (function () {
@@ -135,7 +134,7 @@ layout: default
             oReq2.responseType = "arraybuffer";
             oReq2.onreadystatechange = function (oEvent) {
                 if (this.readyState == 4 && this.status != 200) {
-                  
+                    oReq2.abort();
                     var oReq3 = new XMLHttpRequest();
                     AUDIOLINK = AUDIOLINK.replace("DASH_audio", "audio");
                     oReq3.open("GET", AUDIOLINK, true);
@@ -148,7 +147,7 @@ layout: default
                     oReq3.onload = function (oEvent) {
                       var arrayBuffer3 = oReq3.response;
                       if (arrayBuffer3) {
-                        oReq2.abort();
+                        
                       AudioData = new Uint8Array(arrayBuffer3);
                         runworker();
                       }
