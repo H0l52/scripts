@@ -130,14 +130,14 @@ layout: default
             oReq2.open("GET", AUDIOLINK, true);
             oReq2.responseType = "arraybuffer";
             oReq2.onreadystatechange = function (oEvent) {
-                if (this.readyState == 4 && this.status == 403) {
-                  (function () {
+                if (this.readyState == 4 && this.status != 200) {
+                  
                     var oReq3 = new XMLHttpRequest();
                     AUDIOLINK.replace("DASH_audio", "audio");
                     oReq3.open("GET", AUDIOLINK, true);
                     oReq3.responseType = "arraybuffer";
                     oReq3.onreadystatechange = function (oEvent2) {
-                      if (this.readyState == 4 && this.status == 403) {
+                      if (this.readyState == 4 && this.status != 200) {
                         legal = false;
                       }
                     }
@@ -149,7 +149,7 @@ layout: default
                     }
                   
                     oReq3.send(null);
-                  })();
+                  
                 }
                 
             }
